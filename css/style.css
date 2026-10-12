@@ -99,3 +99,51 @@ section p { margin: 0 0 10px; }
 @media (min-width: 40rem) {
   .hero-names { font-size: 5.6rem; }
 }
+
+/* RSVP form */
+.deadline { text-align: center; }
+#rsvp-form { margin-top: 8px; }
+fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+.guest, .block { padding: 18px 0; border-top: 1px solid var(--stone); }
+.guest legend, .block legend { float: left; width: 100%; padding: 0; margin-bottom: 8px; font: italic 600 1.45rem var(--serif); color: var(--olive); }
+.block > legend { font-size: 1.3rem; }
+.guest > legend + *, .block > legend + * { clear: both; }
+.q { margin-bottom: 10px; }
+.q-label { margin: 0 0 4px; font-weight: 500; }
+
+.choices { display: flex; flex-wrap: wrap; gap: 8px; }
+.choice { position: relative; }
+.choice input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.choice span {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px;
+  border: 1.5px solid var(--stone); border-radius: 999px; cursor: pointer; color: var(--ink);
+}
+.choice input:checked + span { background: var(--olive); border-color: var(--olive); color: var(--white); }
+.choice input:focus-visible + span { outline: 2px solid var(--olive); outline-offset: 3px; }
+.choice input[aria-invalid="true"] + span { border-color: #a3341f; }
+
+label.text { display: block; margin-top: 12px; }
+label.text > span { display: block; font-size: 0.95rem; margin-bottom: 4px; }
+input[type=text], input[type=number], textarea {
+  width: 100%; padding: 11px 12px; font: inherit; color: var(--ink);
+  border: 1.5px solid var(--stone); border-radius: 6px; background: var(--white);
+}
+input:focus-visible, textarea:focus-visible { outline: 2px solid var(--olive); outline-offset: 1px; border-color: var(--olive); }
+input[aria-invalid="true"] { border-color: #a3341f; }
+textarea { resize: vertical; }
+input[type=number] { max-width: 8rem; }
+
+.song { display: grid; grid-template-columns: 1fr 1fr; gap: 0 10px; padding-bottom: 6px; }
+.song .remove { grid-column: 1 / -1; justify-self: end; }
+.btn-link { min-height: 44px; padding: 0; border: 0; background: none; color: var(--olive); font: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+
+.field-error { margin: 6px 0 0; color: #a3341f; font-size: 0.95rem; }
+.form-error { margin: 0 0 8px; padding: 12px 14px; border-left: 3px solid #a3341f; background: #fbf1ee; color: #6e2414; }
+.privacy { margin: 20px 0 18px; font-size: 0.9rem; color: var(--muted); }
+#submit-btn { width: 100%; }
+#submit-btn:disabled { opacity: 0.6; cursor: wait; }
+.submit-status { min-height: 1.5em; margin: 10px 0 0; text-align: center; color: var(--muted); }
+
+.done { text-align: center; padding: 8px 0; }
+.done-title { margin: 4px 0; font: italic 600 2rem var(--serif); color: var(--olive); }
+.btn-outline { background: none; color: var(--olive); border: 1.5px solid var(--olive); }
