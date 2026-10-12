@@ -5,36 +5,53 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#ffffff">
   <title data-i18n="meta_title">Dom &amp; Sabina</title>
+  <link rel="preload" href="fonts/cormorant-garamond-latin-400-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/fonts.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <header class="site-header">
-    <div class="header-row">
-      <a class="brand" href="#home" data-i18n="couple_names"></a>
-      <div class="lang-switch" role="group" data-i18n-aria-label="lang_switch_label">
-        <button type="button" data-lang="sl" data-i18n="lang_sl"></button>
-        <button type="button" data-lang="en" data-i18n="lang_en"></button>
-      </div>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="olive" viewBox="0 0 220 60">
+      <path d="M10 40 C60 30 120 28 210 18" fill="none" stroke="currentColor" stroke-width="1.4"/>
+      <g fill="currentColor">
+        <ellipse cx="40" cy="30" rx="11" ry="4" transform="rotate(-35 40 30)"/>
+        <ellipse cx="52" cy="42" rx="11" ry="4" transform="rotate(25 52 42)"/>
+        <ellipse cx="80" cy="25" rx="12" ry="4.2" transform="rotate(-30 80 25)"/>
+        <ellipse cx="94" cy="38" rx="12" ry="4.2" transform="rotate(22 94 38)"/>
+        <ellipse cx="124" cy="20" rx="12" ry="4.2" transform="rotate(-28 124 20)"/>
+        <ellipse cx="138" cy="33" rx="12" ry="4.2" transform="rotate(20 138 33)"/>
+        <ellipse cx="168" cy="15" rx="11" ry="4" transform="rotate(-25 168 15)"/>
+        <ellipse cx="182" cy="28" rx="11" ry="4" transform="rotate(18 182 28)"/>
+      </g>
+      <circle cx="110" cy="40" r="4.5" fill="currentColor" opacity=".5"/>
+      <circle cx="160" cy="33" r="4" fill="currentColor" opacity=".5"/>
+    </symbol>
+  </svg>
+
+  <header class="top">
+    <a class="monogram" href="#home" data-i18n="monogram"></a>
+    <div class="lang-switch" role="group" data-i18n-aria-label="lang_switch_label">
+      <button type="button" data-lang="sl" data-i18n="lang_sl"></button>
+      <button type="button" data-lang="en" data-i18n="lang_en"></button>
     </div>
-    <nav class="site-nav" data-i18n-aria-label="nav_label">
-      <a href="#programme" data-i18n="nav_programme"></a>
-      <a href="#venue" data-i18n="nav_venue"></a>
-      <a href="#accommodation" data-i18n="nav_accommodation"></a>
-      <a href="#faq" data-i18n="nav_faq"></a>
-      <a href="#rsvp" data-i18n="nav_rsvp"></a>
-    </nav>
   </header>
 
   <main>
     <section id="home" class="hero">
-      <p class="kicker" data-i18n="hero_kicker"></p>
-      <h1 data-i18n="couple_names"></h1>
-      <p class="hero-meta" data-i18n="hero_date_place"></p>
+      <h1 class="hero-names">
+        <span data-i18n="hero_name1"></span>
+        <span class="amp" data-i18n="hero_amp"></span>
+        <span data-i18n="hero_name2"></span>
+      </h1>
+      <svg class="branch" aria-hidden="true"><use href="#olive"/></svg>
+      <p class="hero-date" id="date"></p>
+      <p class="hero-place" data-i18n="hero_place"></p>
 
       <div class="status" aria-live="polite">
-        <p data-show="loading" hidden data-i18n="loading"></p>
-        <div data-show="error" hidden>
+        <p data-show="loading" hidden class="muted" data-i18n="loading"></p>
+        <div data-show="error" hidden class="notice">
           <p data-i18n="error_load"></p>
           <button type="button" id="retry" class="btn" data-i18n="retry"></button>
         </div>
@@ -42,32 +59,43 @@
         <p data-show="invalid" hidden class="notice" data-i18n="invalid_token"></p>
         <p data-show="ok" hidden id="names" class="names"></p>
       </div>
+
+      <nav class="section-nav" data-i18n-aria-label="nav_label">
+        <a href="#programme" data-i18n="nav_programme"></a>
+        <a href="#venue" data-i18n="nav_venue"></a>
+        <a href="#accommodation" data-i18n="nav_accommodation"></a>
+        <a href="#faq" data-i18n="nav_faq"></a>
+        <a href="#rsvp" data-i18n="nav_rsvp"></a>
+      </nav>
     </section>
+
+    <figure class="arch" id="photo" hidden>
+      <img id="photo-img" alt="" data-i18n-alt="photo_alt">
+    </figure>
 
     <section id="programme">
       <h2 data-i18n="programme_title"></h2>
-      <article class="card">
+      <div class="day">
         <h3 data-show="extra" hidden data-i18n="sat_title"></h3>
         <p data-i18n="sat_desc"></p>
-        <p class="soon" data-i18n="sat_time"></p>
-      </article>
-      <article class="card" data-show="extra" hidden>
+        <p class="muted" data-i18n="sat_time"></p>
+      </div>
+      <div class="day" data-show="extra" hidden>
         <h3 data-extra="x_title"></h3>
         <p data-extra="x_desc"></p>
-        <p class="soon" data-extra="x_time"></p>
-      </article>
+        <p class="muted" data-extra="x_time"></p>
+      </div>
     </section>
 
     <section id="venue">
       <h2 data-i18n="venue_title"></h2>
-      <article class="card">
-        <h3 data-show="extra" hidden data-i18n="venue_sat_title"></h3>
-        <p class="soon" data-i18n="venue_sat"></p>
-      </article>
-      <article class="card" data-show="extra" hidden>
-        <h3 data-extra="x_venue_title"></h3>
-        <p class="soon" data-extra="x_venue"></p>
-      </article>
+      <p class="venue-name" data-i18n="venue_name"></p>
+      <p data-i18n="venue_address"></p>
+      <p class="links">
+        <a id="map-link" target="_blank" rel="noopener noreferrer" data-i18n="venue_map"></a>
+        <a id="web-link" target="_blank" rel="noopener noreferrer" data-i18n="venue_web"></a>
+      </p>
+      <p data-show="extra" hidden data-extra="x_venue"></p>
     </section>
 
     <section id="accommodation">
@@ -80,25 +108,26 @@
       <h2 data-i18n="faq_title"></h2>
       <dl class="faq">
         <dt data-i18n="faq_dress_q"></dt>
-        <dd class="soon" data-i18n="faq_dress_a"></dd>
+        <dd class="muted" data-i18n="faq_dress_a"></dd>
         <dt data-i18n="faq_kids_q"></dt>
         <dd>
           <p data-i18n="faq_kids"></p>
           <p data-show="extra" hidden data-extra="x_kids"></p>
         </dd>
         <dt data-i18n="faq_contact_q"></dt>
-        <dd class="soon" data-i18n="faq_contact_a"></dd>
+        <dd><span data-i18n="faq_contact_a"></span> <a id="contact-link"></a></dd>
       </dl>
     </section>
 
     <section id="rsvp">
       <h2 data-i18n="rsvp_title"></h2>
-      <p data-show="ok" hidden class="soon" data-i18n="rsvp_soon"></p>
+      <p data-show="ok" hidden class="muted" data-i18n="rsvp_soon"></p>
       <p data-show="not-ok" hidden class="notice" data-i18n="rsvp_need_link"></p>
     </section>
   </main>
 
   <footer class="site-footer">
+    <svg class="branch small" aria-hidden="true"><use href="#olive"/></svg>
     <p data-i18n="couple_names"></p>
   </footer>
 

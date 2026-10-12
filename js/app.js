@@ -2,7 +2,8 @@
   'use strict';
 
   var I18N = window.I18N;
-  var API_URL = (window.SITE_CONFIG || {}).API_URL;
+  var CFG = window.SITE_CONFIG || {};
+  var API_URL = CFG.API_URL;
   var LANGS = ['sl', 'en'];
   var STORAGE_KEY = 'wedding_lang';
   var TIMEOUT_MS = 15000;
@@ -65,6 +66,8 @@
 
     qsa('[data-i18n]').forEach(function (el) { el.textContent = t(el.getAttribute('data-i18n')); });
     qsa('[data-i18n-aria-label]').forEach(function (el) { el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria-label'))); });
+    qsa('[data-i18n-alt]').forEach(function (el) { el.setAttribute('alt', t(el.getAttribute('data-i18n-alt'))); });
+    document.getElementById('date').textContent = formatDate(CFG.WEDDING_DATE);
     qsa('[data-show]').forEach(function (el) { el.hidden = !isVisible(el.getAttribute('data-show')); });
     qsa('[data-lang]').forEach(function (btn) { btn.setAttribute('aria-pressed', String(btn.getAttribute('data-lang') === state.lang)); });
 
@@ -134,7 +137,39 @@
 
   /* ---------- start ---------- */
 
+  // "sobota, 19. junij 2027" / "Saturday, 19 June 2027"
+  function formatDate(iso) {
+    var p = String(iso || '').split('-');
+    if (p.length !== 3) return '';
+    var d = new Date(Date.UTC(+p[0], +p[1] - 1, +p[2], 12));
+    try {
+      // Built from parts because browsers differ in punctuation (e.g. Chrome omits the comma in en-GB).
+      var parts = {};
+      new Intl.DateTimeFormat(state.lang === 'sl' ? 'sl-SI' : 'en-GB',
+        { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
+        .formatToParts(d).forEach(function (x) { parts[x.type] = x.value; });
+      return state.lang === 'sl'
+        ? parts.weekday + ', ' + parts.day + '. ' + parts.month + ' ' + parts.year
+        : parts.weekday + ', ' + parts.day + ' ' + parts.month + ' ' + parts.year;
+    } catch (e) { return iso; }
+  }
+
+  function setupStaticLinks() {
+    var map = document.getElementById('map-link');
+    var web = document.getElementById('web-link');
+    var mail = document.getElementById('contact-link');
+    if (CFG.VENUE_MAP_URL) map.href = CFG.VENUE_MAP_URL; else map.hidden = true;
+    if (CFG.VENUE_WEBSITE) web.href = CFG.VENUE_WEBSITE; else web.hidden = true;
+    mail.href = 'mailto:' + CFG.CONTACT_EMAIL;
+    mail.textContent = CFG.CONTACT_EMAIL;
+    if (CFG.PHOTO_URL) {
+      document.getElementById('photo-img').src = CFG.PHOTO_URL;
+      document.getElementById('photo').hidden = false;
+    }
+  }
+
   function init() {
+    setupStaticLinks();
     var stored = readStoredLang();
     state.lang = stored || detectBrowserLang();
     state.langChosen = !!stored;
