@@ -6,6 +6,7 @@
   var LANGS = ['sl', 'en'];
   var STORAGE_KEY = 'wedding_lang';
   var TIMEOUT_MS = 15000;
+  var PLUS_ONE = '+1'; // a guest row whose first_name is "+1" is an unnamed plus-one
 
   // status: 'none' (no token) | 'loading' | 'ok' | 'invalid' | 'error'
   var state = { lang: 'sl', langChosen: false, status: 'none', data: null };
@@ -47,7 +48,6 @@
 
   function isVisible(cond) {
     var s = state.status;
-    var hh = s === 'ok' ? state.data.household : null;
     switch (cond) {
       case 'loading': return s === 'loading';
       case 'error': return s === 'error';
@@ -55,8 +55,7 @@
       case 'invalid': return s === 'invalid';
       case 'ok': return s === 'ok';
       case 'not-ok': return s === 'none' || s === 'invalid';
-      case 'sat': return s !== 'ok' || hh.invited_saturday === true;
-      case 'sun': return s === 'ok' && hh.invited_sunday === true;
+      case 'extra': return s === 'ok' && !!state.data.extra;
       default: return true;
     }
   }
@@ -69,18 +68,25 @@
     qsa('[data-show]').forEach(function (el) { el.hidden = !isVisible(el.getAttribute('data-show')); });
     qsa('[data-lang]').forEach(function (btn) { btn.setAttribute('aria-pressed', String(btn.getAttribute('data-lang') === state.lang)); });
 
-    if (state.status === 'ok') {
-      var name = state.data.household.name;
-      document.getElementById('greeting').textContent = name ? t('greeting', { name: name }) : t('greeting_noname');
+    // Texts for invitation-specific sections come from the API, not from this site.
+    var extra = (state.status === 'ok' && state.data.extra) || {};
+    qsa('[data-extra]').forEach(function (el) {
+      var entry = extra[el.getAttribute('data-extra')];
+      el.textContent = entry ? (entry[state.lang] || entry.sl || '') : '';
+    });
 
-      var list = document.getElementById('guest-list');
-      list.textContent = '';
-      state.data.guests.forEach(function (g) {
-        var li = document.createElement('li');
-        li.textContent = (g.first_name + ' ' + g.last_name).trim();
-        list.appendChild(li);
-      });
+    if (state.status === 'ok') {
+      document.getElementById('names').textContent = namesLine(state.data.guests);
     }
+  }
+
+  // "Saša in Urška", "Dušan, Saša in Lan", "Nika" (plus-ones are not named)
+  function namesLine(guests) {
+    var names = guests
+      .map(function (g) { return String(g.first_name || '').trim(); })
+      .filter(function (n) { return n && n !== PLUS_ONE; });
+    if (names.length <= 1) return names.join('');
+    return names.slice(0, -1).join(', ') + ' ' + t('names_and') + ' ' + names[names.length - 1];
   }
 
   /* ---------- data ---------- */

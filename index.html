@@ -40,37 +40,33 @@
         </div>
         <p data-show="no-token" hidden class="notice" data-i18n="no_token"></p>
         <p data-show="invalid" hidden class="notice" data-i18n="invalid_token"></p>
-        <div data-show="ok" hidden class="welcome">
-          <p id="greeting" class="greeting"></p>
-          <p data-i18n="invite_for"></p>
-          <ul id="guest-list" class="guest-list"></ul>
-        </div>
+        <p data-show="ok" hidden id="names" class="names"></p>
       </div>
     </section>
 
     <section id="programme">
       <h2 data-i18n="programme_title"></h2>
-      <article class="card" data-show="sat">
-        <h3 data-i18n="sat_title"></h3>
+      <article class="card">
+        <h3 data-show="extra" hidden data-i18n="sat_title"></h3>
         <p data-i18n="sat_desc"></p>
         <p class="soon" data-i18n="sat_time"></p>
       </article>
-      <article class="card" data-show="sun" hidden>
-        <h3 data-i18n="sun_title"></h3>
-        <p data-i18n="sun_desc"></p>
-        <p class="soon" data-i18n="sun_time"></p>
+      <article class="card" data-show="extra" hidden>
+        <h3 data-extra="x_title"></h3>
+        <p data-extra="x_desc"></p>
+        <p class="soon" data-extra="x_time"></p>
       </article>
     </section>
 
     <section id="venue">
       <h2 data-i18n="venue_title"></h2>
-      <article class="card" data-show="sat">
-        <h3 data-i18n="venue_sat_title"></h3>
+      <article class="card">
+        <h3 data-show="extra" hidden data-i18n="venue_sat_title"></h3>
         <p class="soon" data-i18n="venue_sat"></p>
       </article>
-      <article class="card" data-show="sun" hidden>
-        <h3 data-i18n="venue_sun_title"></h3>
-        <p class="soon" data-i18n="venue_sun"></p>
+      <article class="card" data-show="extra" hidden>
+        <h3 data-extra="x_venue_title"></h3>
+        <p class="soon" data-extra="x_venue"></p>
       </article>
     </section>
 
@@ -87,8 +83,8 @@
         <dd class="soon" data-i18n="faq_dress_a"></dd>
         <dt data-i18n="faq_kids_q"></dt>
         <dd>
-          <p data-show="sat" data-i18n="faq_kids_sat"></p>
-          <p data-show="sun" hidden data-i18n="faq_kids_sun"></p>
+          <p data-i18n="faq_kids"></p>
+          <p data-show="extra" hidden data-extra="x_kids"></p>
         </dd>
         <dt data-i18n="faq_contact_q"></dt>
         <dd class="soon" data-i18n="faq_contact_a"></dd>
