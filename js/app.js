@@ -381,6 +381,10 @@
     var d = state.data;
     var showDeadline = !!d.rsvp_deadline && d.deadline_passed !== true;
     var dl = showDeadline ? formatShortDate(d.rsvp_deadline) : '';
+    // Big deadline banner on the first screen – only until this invitation has replied.
+    var showBanner = showDeadline && !d.latest && !rsvp.done;
+    $('deadline-banner').hidden = !showBanner;
+    $('banner-date').textContent = showBanner ? dl : '';
     $('rsvp-deadline').hidden = !showDeadline;
     $('rsvp-deadline').textContent = showDeadline ? t('rsvp_deadline', { date: dl }) : '';
     $('done-deadline').hidden = !showDeadline;

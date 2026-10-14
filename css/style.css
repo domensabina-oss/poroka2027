@@ -79,7 +79,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--olive); outline
 .scene img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 100%; }
 
 .welcome { text-align: center; padding: 0 var(--gutter); }
-.status { margin: 8px 0 0; }
+.status { margin: 18px 0 0; }
 .names { margin: 0; font: italic 400 1.75rem/1.3 var(--serif); color: var(--ink); }
 .notice { background: var(--mist); padding: 14px 16px; margin: 0; text-align: center; border-radius: 4px; }
 .notice p { margin: 0 0 12px; }
@@ -147,7 +147,13 @@ h3 { margin: 0 0 6px; font: italic 600 1.45rem var(--serif); color: var(--olive)
 }
 
 /* RSVP form */
-.deadline { text-align: center; }
+.panel p.deadline { text-align: center; font: italic 600 1.5rem/1.3 var(--serif); color: var(--olive); margin-bottom: 14px; }
+
+/* Deadline banner on the first screen (until the invitation has replied) */
+.deadline-banner { margin: 16px auto 0; max-width: 22rem; padding: 14px 18px 16px; border: 1.5px solid var(--olive); border-radius: 14px; background: var(--white); }
+.deadline-banner .db-label { margin: 0; font-size: 0.95rem; letter-spacing: 0.02em; color: var(--muted); }
+.deadline-banner .db-date { margin: 0 0 10px; font: italic 600 2.5rem/1.1 var(--serif); color: var(--olive); }
+.db-cta { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
 #rsvp-form { margin-top: 8px; }
 fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
 .adults { text-align: center; font-weight: 500; }

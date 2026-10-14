@@ -60,8 +60,6 @@
         <p class="hero-place" data-i18n="hero_place"></p>
       </div>
 
-      <div class="scene" aria-hidden="true"><img src="images/scene.svg" alt=""></div>
-
       <div class="welcome">
         <div class="status" aria-live="polite">
           <p data-show="loading" hidden class="muted" data-i18n="loading"></p>
@@ -73,7 +71,14 @@
           <p data-show="invalid" hidden class="notice" data-i18n="invalid_token"></p>
           <p data-show="ok" hidden id="names" class="names"></p>
         </div>
+        <div class="deadline-banner" id="deadline-banner" hidden>
+          <p class="db-label" data-i18n="banner_label"></p>
+          <p class="db-date" id="banner-date"></p>
+          <a class="btn db-cta" href="#rsvp" data-i18n="banner_cta"></a>
+        </div>
       </div>
+
+      <div class="scene" aria-hidden="true"><img src="images/scene.svg" alt=""></div>
     </section>
 
     <section id="programme" class="panel panel-tint">
