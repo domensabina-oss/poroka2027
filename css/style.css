@@ -8,13 +8,17 @@
   --sage: #a9b597;        /* decorative only: ampersand, rules */
   --stone: #e3dfd4;       /* hairlines */
   --mist: #f4f6f0;        /* notice background */
+  --tint: #ecf0e2;        /* alternate page background, clearly different from white */
+  --header-h: 96px;       /* updated from JS to the real header height */
   --gutter: 16px;
   --serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
   --sans: 'Jost', system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth;
+  /* each page snaps under the sticky header; "proximity" so long pages (the form) still scroll freely */
+  scroll-snap-type: y proximity; scroll-padding-top: var(--header-h); }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 body {
@@ -47,8 +51,18 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--olive); outline
 }
 .lang-switch button[aria-pressed="true"] { color: var(--olive); font-weight: 500; text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1.5px; }
 
+/* Pages: every section fills the screen below the header, alternating white / tint */
+.panel {
+  min-height: calc(100vh - var(--header-h));
+  min-height: calc(100svh - var(--header-h));
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 56px 0; scroll-snap-align: start; text-align: center;
+}
+.panel-tint { background: var(--tint); }
+.panel-inner { width: 100%; max-width: 40rem; margin: 0 auto; padding: 0 var(--gutter); }
+.panel-home { padding: 0 0 32px; justify-content: flex-start; }
+
 /* Hero */
-main { max-width: 44rem; margin: 0 auto; }
 .hero { text-align: center; padding: 24px var(--gutter) 0; max-width: 44rem; margin: 0 auto; }
 .hero-names { margin: 0; font: italic 400 4.4rem/0.92 var(--serif); color: var(--olive); }
 .hero-names span { display: block; }
@@ -72,36 +86,33 @@ main { max-width: 44rem; margin: 0 auto; }
 .muted { color: var(--muted); }
 
 .section-nav {
-  display: flex; gap: 22px; max-width: 44rem; margin: 0 auto; padding: 0 var(--gutter);
+  display: flex; gap: 20px; max-width: 44rem; margin: 0 auto; padding: 0 var(--gutter);
   overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
 }
 .section-nav::-webkit-scrollbar { display: none; }
-/* soft fade at the right edge on phones: shows the menu continues sideways */
-@media (max-width: 39.99rem) {
-  .section-nav { -webkit-mask-image: linear-gradient(to right, #000 85%, transparent); mask-image: linear-gradient(to right, #000 85%, transparent); padding-right: 40px; }
-}
-.section-nav a { flex: none; padding: 10px 0 12px; text-decoration: none; font-size: 0.95rem; white-space: nowrap; }
-@media (min-width: 40rem) { .section-nav { justify-content: center; } }
+.section-nav a { flex: none; padding: 10px 0 12px; text-decoration: none; font-size: 0.95rem; white-space: nowrap; border-bottom: 2px solid transparent; }
+.section-nav a[aria-current="true"] { border-bottom-color: var(--olive); font-weight: 500; }
+@supports (justify-content: safe center) { .section-nav { justify-content: safe center; } }
 
 /* Villa photo in an Istrian stone-arch frame */
-.arch { margin: 28px var(--gutter) 0; aspect-ratio: 4 / 5; max-height: 560px; border-radius: 50% 50% 6px 6px / 40% 40% 6px 6px; /* 4:5 frame → semicircular top */ overflow: hidden; background: var(--mist); }
+.arch { margin: 18px 0 0; aspect-ratio: 4 / 5; max-height: 560px; border-radius: 50% 50% 6px 6px / 40% 40% 6px 6px; /* 4:5 frame → semicircular top */ overflow: hidden; background: var(--mist); }
 .arch img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-/* Sections */
-section { padding: 48px var(--gutter) 0; scroll-margin-top: 96px; }
-#home { scroll-margin-top: 0; }
-h2 { margin: 0 0 16px; font: 600 2.1rem/1.1 var(--serif); color: var(--olive); text-align: center; }
-h3 { margin: 0 0 4px; font: italic 600 1.4rem var(--serif); color: var(--olive); }
-section { text-align: center; }
-section p { margin: 0 0 10px; }
-
-.lead { text-align: center; }
+/* Page headings */
+h2 { margin: 0; font: 600 2.3rem/1.1 var(--serif); color: var(--olive); text-align: center; }
+.panel h2 + .branch.small { margin: 10px auto 22px; }
+h3 { margin: 0 0 6px; font: italic 600 1.45rem var(--serif); color: var(--olive); }
+.panel p { margin: 0 0 10px; }
 .small { font-size: 0.9rem; }
-.center { text-align: center; }
+
+/* Good-to-know page: one block per topic */
+.info-block { padding: 20px 0; }
+.info-block + .info-block { border-top: 1px solid rgba(75, 90, 46, 0.2); }
+.info-block p:last-child { margin-bottom: 0; }
 
 /* Timetable: a real sequence, so an ordered list with times */
-.timeline { list-style: none; margin: 20px 0 14px; padding: 0; border-top: 1px solid var(--stone); }
-.timeline li { padding: 11px 0; border-bottom: 1px solid var(--stone); text-align: center; }
+.timeline { list-style: none; margin: 20px 0 14px; padding: 0; border-top: 1px solid rgba(75, 90, 46, 0.2); }
+.timeline li { padding: 11px 0; border-bottom: 1px solid rgba(75, 90, 46, 0.2); text-align: center; }
 .timeline .tt-time { margin-right: 8px; }
 .tt-time { font: italic 600 1.3rem/1 var(--serif); color: var(--olive); font-variant-numeric: lining-nums; }
 .tt-what { line-height: 1.4; }
@@ -120,12 +131,6 @@ section p { margin: 0 0 10px; }
 .map-label.villa { font: italic 600 30px var(--serif); fill: var(--olive); paint-order: stroke; stroke: #f1f4ec; stroke-width: 6px; stroke-linejoin: round; }
 
 
-.faq { margin: 0; }
-.faq dt { font-weight: 500; margin-top: 18px; }
-.faq dt:first-child { margin-top: 0; }
-.faq dd { margin: 4px 0 0; }
-.faq dd p { margin: 0 0 4px; }
-
 .btn {
   min-height: 48px; padding: 0 26px;
   border: 0; border-radius: 999px;
@@ -133,7 +138,7 @@ section p { margin: 0 0 10px; }
   font: 500 1rem var(--sans); cursor: pointer;
 }
 
-.site-footer { text-align: center; padding: 56px var(--gutter) 40px; color: var(--muted); font: italic 1.1rem var(--serif); }
+.site-footer { text-align: center; padding: 40px var(--gutter) 40px; color: var(--muted); font: italic 1.1rem var(--serif); }
 .site-footer p { margin: 0; }
 
 @media (min-width: 40rem) {

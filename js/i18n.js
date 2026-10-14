@@ -17,9 +17,7 @@ window.I18N = {
     nav_label: 'Vsebina strani',
     nav_programme: 'Program',
     nav_venue: 'Lokacija',
-    nav_accommodation: 'Nastanitev',
-    nav_info: 'Koristno',
-    nav_faq: 'Vprašanja',
+    nav_info: 'Koristne informacije',
     nav_rsvp_cta: 'Potrdi udeležbo',
 
     loading: 'Nalagam vabilo …',
@@ -59,20 +57,18 @@ window.I18N = {
     map_villa1: 'Villa Paradiso',
     map_villa2: 'd’Istria',
 
-    acc_title: 'Nastanitev',
     acc_text: 'Priporočava nastanitev največ 30 minut vožnje od vile.',
     acc_help: 'Če želiš pomoč pri iskanju, to označi v obrazcu za potrditev udeležbe – poslala ti bova predloge in pomagala pri usklajevanju.',
 
     info_title: 'Koristne informacije',
-    info_soon: 'Kmalu.',
+    info_acc_h: 'Nastanitev',
+    info_dress_h: 'Kaj obleči',
+    info_kids_h: 'Samo za odrasle',
+    info_contact_h: 'Kontakt',
 
-    faq_title: 'Pogosta vprašanja',
-    faq_dress_q: 'Kako naj se oblečem?',
     faq_dress_a1: 'Poletno elegantno. Junij v Istri je topel, zato so idealne lahke tkanine in svetle, poletne barve – bela naj ostane nevesti.',
     faq_dress_a2: 'Pri čevljih pomisli tudi na zunanje površine: širše pete ali elegantni ravni čevlji bodo udobnejši od tankih pet. Zabava bo trajala pozno v noč, zato vzemi s seboj lahek jopič ali šal.',
-    faq_kids_q: 'Ali so otroci dobrodošli?',
     faq_kids_a: 'Poroka je samo za odrasle. Izjema so novorojenčki.',
-    faq_contact_q: 'Kako vaju dosežem?',
     faq_contact_a: 'Piši nama na',
 
     rsvp_title: 'Potrditev udeležbe',
@@ -148,9 +144,7 @@ window.I18N = {
     nav_label: 'Page sections',
     nav_programme: 'Programme',
     nav_venue: 'Venue',
-    nav_accommodation: 'Stay',
     nav_info: 'Good to know',
-    nav_faq: 'FAQ',
     nav_rsvp_cta: 'RSVP',
 
     loading: 'Loading your invitation…',
@@ -190,20 +184,18 @@ window.I18N = {
     map_villa1: 'Villa Paradiso',
     map_villa2: 'd’Istria',
 
-    acc_title: 'Accommodation',
     acc_text: 'We recommend staying within 30 minutes’ drive of the villa.',
     acc_help: 'If you’d like help finding a place, let us know in the RSVP form and we’ll send you suggestions and help coordinate.',
 
     info_title: 'Good to know',
-    info_soon: 'Coming soon.',
+    info_acc_h: 'Accommodation',
+    info_dress_h: 'What to wear',
+    info_kids_h: 'Adults only',
+    info_contact_h: 'Contact',
 
-    faq_title: 'FAQ',
-    faq_dress_q: 'What should I wear?',
     faq_dress_a1: 'Summer elegant. June in Istria is warm, so light fabrics and bright summer colours are ideal – white is reserved for the bride.',
     faq_dress_a2: 'When choosing shoes, think about outdoor surfaces: block heels or smart flats will be more comfortable than stilettos. The party goes on late into the night, so bring a light jacket or shawl.',
-    faq_kids_q: 'Are children welcome?',
     faq_kids_a: 'The wedding is adults-only. Newborns are the only exception.',
-    faq_contact_q: 'How can I reach you?',
     faq_contact_a: 'Write to us at',
 
     rsvp_title: 'RSVP',

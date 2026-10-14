@@ -87,6 +87,7 @@
     renderTimetable();
     qsa('[data-show]').forEach(function (el) { el.hidden = !isVisible(el.getAttribute('data-show')); });
     qsa('[data-lang]').forEach(function (btn) { btn.setAttribute('aria-pressed', String(btn.getAttribute('data-lang') === state.lang)); });
+    syncHeaderHeight();
 
     if (state.status === 'ok') {
       $('names').textContent = namesLine(state.data.guests);
@@ -440,7 +441,33 @@
     }
   }
 
+  // Pages snap below the sticky header: keep its real height in a CSS variable.
+  function syncHeaderHeight() {
+    var h = document.querySelector('header.top');
+    if (h) document.documentElement.style.setProperty('--header-h', h.offsetHeight + 'px');
+  }
+
+  // Underline the menu item of the page currently in the middle of the screen.
+  function setupActiveNav() {
+    if (!('IntersectionObserver' in window)) return;
+    var links = qsa('.section-nav a');
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        var id = en.target.id;
+        links.forEach(function (a) {
+          if (a.getAttribute('href') === '#' + id) a.setAttribute('aria-current', 'true');
+          else a.removeAttribute('aria-current');
+        });
+      });
+    }, { rootMargin: '-50% 0px -50% 0px' });
+    qsa('main > section.panel').forEach(function (sec) { obs.observe(sec); });
+  }
+
   function init() {
+    syncHeaderHeight();
+    window.addEventListener('resize', syncHeaderHeight);
+    setupActiveNav();
     setupStaticLinks();
     var stored = readStoredLang();
     state.lang = stored || detectBrowserLang();
