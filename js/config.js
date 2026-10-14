@@ -19,8 +19,7 @@ window.SITE_CONFIG = {
     { time: '18:00', label: 'tt_dinner' },
     { time: '20:30', label: 'tt_party' },
     { time: '22:00', label: 'tt_cake' },
-    { time: '00:00', label: 'tt_dj_end' },
-    { time: '03:00', label: 'tt_end' }
+    { time: '00:00', label: 'tt_end' }
   ],
 
   // Villa photo, e.g. 'images/villa.jpg'. Leave empty until we have photos we are allowed to use – the photo frame is hidden while empty.
