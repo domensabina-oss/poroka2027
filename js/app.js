@@ -107,6 +107,7 @@
       what.className = 'tt-what';
       what.textContent = t(item.label);
       li.appendChild(time);
+      li.appendChild(document.createTextNode(' '));
       li.appendChild(what);
       ol.appendChild(li);
     });
