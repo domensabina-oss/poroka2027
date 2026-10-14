@@ -28,7 +28,6 @@ window.I18N = {
     retry: 'Poskusi znova',
 
     programme_title: 'Program',
-    programme_intro: 'Civilni obred, večerja in zabava z DJ-em.',
     tt_label: 'Časovnica',
     tt_arrival: 'Prihod in dobrodošlica',
     tt_ceremony: 'Civilni obred',
@@ -155,7 +154,6 @@ window.I18N = {
     retry: 'Try again',
 
     programme_title: 'Programme',
-    programme_intro: 'Civil ceremony, dinner and a party with a DJ.',
     tt_label: 'Timetable',
     tt_arrival: 'Arrival and welcome drinks',
     tt_ceremony: 'Civil ceremony',
