@@ -11,6 +11,19 @@ window.SITE_CONFIG = {
 
   CONTACT_EMAIL: 'sabinadomensmuc@gmail.com',
 
+  // Timetable (24h). "label" is a key in js/i18n.js, so each line exists in SL and EN.
+  TIMETABLE: [
+    { time: '13:00', label: 'tt_arrival' },
+    { time: '14:00', label: 'tt_ceremony' },
+    { time: '14:45', label: 'tt_toast' },
+    { time: '15:30', label: 'tt_aperitivo' },
+    { time: '18:00', label: 'tt_dinner' },
+    { time: '20:30', label: 'tt_party' },
+    { time: '22:00', label: 'tt_cake' },
+    { time: '00:00', label: 'tt_dj_end' },
+    { time: '03:00', label: 'tt_end' }
+  ],
+
   // Villa photo, e.g. 'images/villa.jpg'. Leave empty until we have photos we are allowed to use – the photo frame is hidden while empty.
   PHOTO_URL: ''
 };

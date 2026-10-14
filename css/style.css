@@ -43,16 +43,23 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--olive); outline
 
 /* Hero */
 main { max-width: 44rem; margin: 0 auto; }
-.hero { text-align: center; padding: 24px var(--gutter) 8px; }
+.hero { text-align: center; padding: 24px var(--gutter) 0; max-width: 44rem; margin: 0 auto; }
 .hero-names { margin: 0; font: italic 400 4.4rem/0.92 var(--serif); color: var(--olive); }
 .hero-names span { display: block; }
 .hero-names .amp { font-size: 0.55em; color: var(--sage); margin: 0.1em 0; }
 .branch { display: block; width: 180px; height: 50px; margin: 20px auto 8px; color: var(--olive); }
 .branch.small { width: 110px; height: 30px; margin-bottom: 4px; }
-.hero-date { margin: 8px 0 2px; font: 500 1.08rem var(--sans); letter-spacing: 0.03em; }
+.hero-date { margin: 22px 0 2px; font: 500 1.08rem var(--sans); letter-spacing: 0.03em; }
 .hero-place { margin: 0; color: var(--muted); }
 
-.status { margin: 28px 0 0; }
+/* Scene illustration (vineyards, cypress path, long table) – full width, fades into the page */
+.scene { margin: 4px 0 0; height: 340px; overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 90%, transparent 100%);
+          mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 90%, transparent 100%); }
+.scene img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 100%; }
+
+.welcome { text-align: center; padding: 0 var(--gutter); }
+.status { margin: 8px 0 0; }
 .names { margin: 0; font: italic 400 1.75rem/1.3 var(--serif); color: var(--ink); }
 .notice { background: var(--mist); padding: 14px 16px; margin: 0; text-align: left; border-radius: 4px; }
 .notice p { margin: 0 0 12px; }
@@ -72,9 +79,15 @@ h2 { margin: 0 0 16px; font: 600 2.1rem/1.1 var(--serif); color: var(--olive); t
 h3 { margin: 0 0 4px; font: italic 600 1.4rem var(--serif); color: var(--olive); }
 section p { margin: 0 0 10px; }
 
-.day { padding: 16px 0; border-top: 1px solid var(--stone); }
-.day:last-child { border-bottom: 1px solid var(--stone); }
-.day p:last-child { margin-bottom: 0; }
+.lead { text-align: center; }
+.small { font-size: 0.9rem; }
+.center { text-align: center; }
+
+/* Timetable: a real sequence, so an ordered list with times */
+.timeline { list-style: none; margin: 20px 0 14px; padding: 0; border-top: 1px solid var(--stone); }
+.timeline li { display: grid; grid-template-columns: 4.2rem 1fr; gap: 12px; align-items: baseline; padding: 11px 0; border-bottom: 1px solid var(--stone); }
+.tt-time { font: italic 600 1.3rem/1 var(--serif); color: var(--olive); font-variant-numeric: lining-nums; }
+.tt-what { line-height: 1.4; }
 
 .venue-name { font: italic 600 1.45rem var(--serif); color: var(--olive); margin-bottom: 2px; }
 .links { display: flex; flex-wrap: wrap; gap: 4px 20px; }
@@ -98,18 +111,21 @@ section p { margin: 0 0 10px; }
 
 @media (min-width: 40rem) {
   .hero-names { font-size: 5.6rem; }
+  .scene { height: 420px; }
 }
 
 /* RSVP form */
 .deadline { text-align: center; }
 #rsvp-form { margin-top: 8px; }
 fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
-.guest, .block { padding: 18px 0; border-top: 1px solid var(--stone); }
-.guest legend, .block legend { float: left; width: 100%; padding: 0; margin-bottom: 8px; font: italic 600 1.45rem var(--serif); color: var(--olive); }
-.block > legend { font-size: 1.3rem; }
-.guest > legend + *, .block > legend + * { clear: both; }
-.q { margin-bottom: 10px; }
-.q-label { margin: 0 0 4px; font-weight: 500; }
+.adults { text-align: center; font-weight: 500; }
+.block { padding: 18px 0; border-top: 1px solid var(--stone); }
+.block legend { float: left; width: 100%; padding: 0; margin-bottom: 10px; font: italic 600 1.35rem var(--serif); color: var(--olive); }
+.block > legend + * { clear: both; }
+.block > label.text:first-child { margin-top: 0; }
+label.text > .label-strong { font: italic 600 1.35rem var(--serif); color: var(--olive); margin-bottom: 6px; }
+label.text > .hint { color: var(--muted); margin-bottom: 6px; }
+.choice .num { min-width: 52px; justify-content: center; padding: 0 16px; }
 
 .choices { display: flex; flex-wrap: wrap; gap: 8px; }
 .choice { position: relative; }

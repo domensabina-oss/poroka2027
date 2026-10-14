@@ -7,12 +7,15 @@
   var LANGS = ['sl', 'en'];
   var STORAGE_KEY = 'wedding_lang';
   var TIMEOUT_MS = 15000;
-  var PLUS_ONE = '+1'; // a guest row whose first_name is "+1" is an unnamed plus-one
+  var PLUS_ONE = '+1'; // a guest row named "+1" is an unnamed seat: counted, never shown by name
 
   // status: 'none' (no token) | 'loading' | 'ok' | 'invalid' | 'error'
   var state = { lang: 'sl', langChosen: false, status: 'none', data: null };
   // RSVP form state. errorKey/statusKey are translation keys so messages switch language too.
-  var rsvp = { built: false, done: false, sending: false, errorKey: null, statusKey: null };
+  var rsvp = { built: false, done: false, sending: false, errorKey: null, statusKey: null, lastAttending: null };
+
+  function $(id) { return document.getElementById(id); }
+  function qsa(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
 
   /* ---------- language ---------- */
 
@@ -45,12 +48,23 @@
     return s;
   }
 
-  /* ---------- rendering ---------- */
+  // Seats on this invitation → text variant: 1 person, 2 (Slovene dual), 3+ (plural).
+  function seats() { return state.data ? Math.max(1, state.data.seats || state.data.guests.length || 1) : 1; }
+  function tn(base) { var n = seats(); return t(base + '_' + (n >= 3 ? 3 : n)); }
 
-  function qsa(sel) { return Array.prototype.slice.call(document.querySelectorAll(sel)); }
+  function applyI18n(root) {
+    qsa('[data-i18n]', root).forEach(function (el) { el.textContent = t(el.getAttribute('data-i18n')); });
+    qsa('[data-i18n-n]', root).forEach(function (el) { el.textContent = tn(el.getAttribute('data-i18n-n')); });
+    qsa('[data-i18n-aria-label]', root).forEach(function (el) { el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria-label'))); });
+    qsa('[data-i18n-alt]', root).forEach(function (el) { el.setAttribute('alt', t(el.getAttribute('data-i18n-alt'))); });
+    qsa('[data-i18n-placeholder]', root).forEach(function (el) { el.setAttribute('placeholder', t(el.getAttribute('data-i18n-placeholder'))); });
+  }
+
+  /* ---------- rendering ---------- */
 
   function isVisible(cond) {
     var s = state.status;
+    var d = state.data;
     switch (cond) {
       case 'loading': return s === 'loading';
       case 'error': return s === 'error';
@@ -58,41 +72,44 @@
       case 'invalid': return s === 'invalid';
       case 'ok': return s === 'ok';
       case 'not-ok': return s === 'none' || s === 'invalid';
-      case 'extra': return s === 'ok' && !!state.data.extra;
-      case 'closed': return s === 'ok' && state.data.deadline_passed === true;
-      case 'open': return s === 'ok' && state.data.deadline_passed !== true && !rsvp.done;
+      case 'closed': return s === 'ok' && d.deadline_passed === true;
+      case 'open': return s === 'ok' && d.deadline_passed !== true && !rsvp.done;
       case 'done': return s === 'ok' && rsvp.done;
-      case 'saved-before': return s === 'ok' && state.data.deadline_passed !== true && !rsvp.done && !!state.data.latest;
+      case 'saved-before': return s === 'ok' && d.deadline_passed !== true && !rsvp.done && !!d.latest;
       default: return true;
     }
   }
 
   function render() {
     document.documentElement.lang = state.lang;
-
     applyI18n(document);
-    document.getElementById('date').textContent = formatDate(CFG.WEDDING_DATE);
+    $('date').textContent = formatDate(CFG.WEDDING_DATE);
+    renderTimetable();
     qsa('[data-show]').forEach(function (el) { el.hidden = !isVisible(el.getAttribute('data-show')); });
     qsa('[data-lang]').forEach(function (btn) { btn.setAttribute('aria-pressed', String(btn.getAttribute('data-lang') === state.lang)); });
 
-    // Texts for invitation-specific sections come from the API, not from this site.
-    var extra = (state.status === 'ok' && state.data.extra) || {};
-    qsa('[data-extra]').forEach(function (el) {
-      var entry = extra[el.getAttribute('data-extra')];
-      el.textContent = entry ? (entry[state.lang] || entry.sl || '') : '';
-    });
-
     if (state.status === 'ok') {
-      document.getElementById('names').textContent = namesLine(state.data.guests);
+      $('names').textContent = namesLine(state.data.guests);
+      $('allergies-hint').hidden = seats() < 2;
       renderRsvpTexts();
     }
   }
 
-  function applyI18n(root) {
-    Array.prototype.forEach.call(root.querySelectorAll('[data-i18n]'), function (el) { el.textContent = t(el.getAttribute('data-i18n')); });
-    Array.prototype.forEach.call(root.querySelectorAll('[data-i18n-aria-label]'), function (el) { el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria-label'))); });
-    Array.prototype.forEach.call(root.querySelectorAll('[data-i18n-alt]'), function (el) { el.setAttribute('alt', t(el.getAttribute('data-i18n-alt'))); });
-    Array.prototype.forEach.call(root.querySelectorAll('[data-i18n-placeholder]'), function (el) { el.setAttribute('placeholder', t(el.getAttribute('data-i18n-placeholder'))); });
+  function renderTimetable() {
+    var ol = $('timeline');
+    ol.textContent = '';
+    (CFG.TIMETABLE || []).forEach(function (item) {
+      var li = document.createElement('li');
+      var time = document.createElement('span');
+      time.className = 'tt-time';
+      time.textContent = item.time;
+      var what = document.createElement('span');
+      what.className = 'tt-what';
+      what.textContent = t(item.label);
+      li.appendChild(time);
+      li.appendChild(what);
+      ol.appendChild(li);
+    });
   }
 
   // "Saša in Urška", "Dušan, Saša in Lan", "Nika" (plus-ones are not named)
@@ -129,9 +146,9 @@
         if (res && res.ok === true && res.household && Array.isArray(res.guests)) {
           state.data = res;
           state.status = 'ok';
-          buildForm();
           var pref = res.household.preferred_language;
           if (!state.langChosen && LANGS.indexOf(pref) >= 0) state.lang = pref;
+          buildForm();
         } else if (res && res.error === 'invalid_token') {
           state.status = 'invalid';
         } else {
@@ -150,49 +167,43 @@
 
   /* ---------- RSVP form ---------- */
 
-  function $(id) { return document.getElementById(id); }
-  function hasExtra() { return !!(state.data && state.data.extra); }
-
   function buildForm() {
     if (rsvp.built) return;
     rsvp.built = true;
     var latest = state.data.latest || null;
-    var tpl = $('tpl-guest');
+    var n = seats();
 
-    state.data.guests.forEach(function (g) {
-      var node = tpl.content.firstElementChild.cloneNode(true);
-      node.setAttribute('data-guest', g.guest_id);
-      var legend = node.querySelector('.guest-name');
-      if (String(g.first_name).trim() === PLUS_ONE) legend.setAttribute('data-i18n', 'plus_one');
-      else legend.textContent = g.first_name;
-      ['main', 'extra'].forEach(function (q) {
-        Array.prototype.forEach.call(node.querySelectorAll('[data-q="' + q + '"] input[type=radio]'), function (r) {
-          r.name = q + '-' + g.guest_id;
-        });
-      });
-      var prev = latest && latest.guests && latest.guests[g.guest_id];
-      if (prev) {
-        setQ(node, 'main', prev.attending);
-        setQ(node, 'extra', prev.attending_extra);
-        node.querySelector('.allergies').value = prev.allergies || '';
-      }
-      $('guest-fields').appendChild(node);
-    });
+    // Number-of-people choices (only asked when the invitation has more than one seat)
+    var box = $('people-choices');
+    for (var i = 1; i <= n; i++) {
+      var lab = document.createElement('label');
+      lab.className = 'choice';
+      var inp = document.createElement('input');
+      inp.type = 'radio'; inp.name = 'people'; inp.value = String(i);
+      var sp = document.createElement('span');
+      sp.className = 'num';
+      sp.textContent = String(i);
+      lab.appendChild(inp); lab.appendChild(sp);
+      box.appendChild(lab);
+    }
+    $('people-block').hidden = n < 2;
 
     var songs = latest && latest.song_requests && latest.song_requests.length ? latest.song_requests : [{ artist: '', title: '' }];
     songs.forEach(addSong);
 
     if (latest) {
-      var acc = $('rsvp-form').querySelector('input[name="acc"][value="' + latest.accommodation_help + '"]');
-      if (acc) acc.checked = true;
+      checkRadio('attending', latest.attending);
+      if (latest.attending === 'yes') checkRadio('people', String(latest.people_attending || n));
+      $('allergies').value = latest.allergies || '';
+      checkRadio('acc', latest.accommodation_help);
       $('acc-people').value = latest.accommodation_people || '';
       $('acc-notes').value = latest.accommodation_notes || '';
       $('message').value = latest.message || '';
     }
-    updateAccDetails();
+    updateDependent();
 
     $('rsvp-form').addEventListener('change', onFieldChange);
-    $('acc-people').addEventListener('input', function () { $('err-people').hidden = true; $('acc-people').removeAttribute('aria-invalid'); clearSummaryIfResolved(); });
+    $('acc-people').addEventListener('input', function () { setError('err-acc-people', $('acc-people'), false); clearSummaryIfResolved(); });
     $('rsvp-form').addEventListener('submit', onSubmit);
     $('add-song').addEventListener('click', function () {
       var row = addSong({ artist: '', title: '' });
@@ -205,10 +216,9 @@
     });
   }
 
-  function setQ(node, q, val) {
-    var r = node.querySelector('[data-q="' + q + '"] input[value="' + val + '"]');
-    if (r) r.checked = true;
-  }
+  function radios(name) { return qsa('#rsvp-form input[name="' + name + '"]'); }
+  function radioValue(name) { var c = $('rsvp-form').querySelector('input[name="' + name + '"]:checked'); return c ? c.value : ''; }
+  function checkRadio(name, val) { var r = $('rsvp-form').querySelector('input[name="' + name + '"][value="' + val + '"]'); if (r) r.checked = true; }
 
   function addSong(song) {
     var box = $('song-rows');
@@ -227,21 +237,28 @@
     return row;
   }
 
-  function accValue() {
-    var c = $('rsvp-form').querySelector('input[name="acc"]:checked');
-    return c ? c.value : '';
+  // Show/hide the parts that depend on earlier answers.
+  function updateDependent() {
+    var coming = radioValue('attending') === 'yes';
+    $('coming-fields').hidden = !coming;
+    // Default the number of people to everyone on the invitation the first time "yes" is chosen.
+    if (coming && !radioValue('people')) checkRadio('people', String(seats()));
+    var accYes = radioValue('acc') === 'yes';
+    $('acc-details').hidden = !accYes;
+    if (accYes && !$('acc-people').value) $('acc-people').value = radioValue('people') || String(seats());
   }
 
-  function updateAccDetails() { $('acc-details').hidden = accValue() !== 'yes'; }
+  function setError(errId, controls, on) {
+    $(errId).hidden = !on;
+    [].concat(controls).forEach(function (c) { if (on) c.setAttribute('aria-invalid', 'true'); else c.removeAttribute('aria-invalid'); });
+  }
 
   function onFieldChange(e) {
     var el = e.target;
     if (el.type === 'radio') {
-      var holder = el.name === 'acc' ? $('acc-block') : el.closest('.q');
-      var err = el.name === 'acc' ? $('err-acc') : holder.querySelector('.field-error');
-      err.hidden = true;
-      Array.prototype.forEach.call(holder.querySelectorAll('input[type=radio][name="' + el.name + '"]'), function (r) { r.removeAttribute('aria-invalid'); });
-      if (el.name === 'acc') updateAccDetails();
+      var map = { attending: 'err-attending', people: 'err-people-attending', acc: 'err-acc' };
+      if (map[el.name]) setError(map[el.name], radios(el.name), false);
+      updateDependent();
     }
     clearSummaryIfResolved();
   }
@@ -249,58 +266,47 @@
   // Hide the "answers missing" summary once every flagged field has been answered.
   function clearSummaryIfResolved() {
     if (rsvp.errorKey !== 'err_summary') return;
-    var open = Array.prototype.some.call(document.querySelectorAll('#rsvp-form .field-error'), function (e) { return !e.hidden; });
+    var open = qsa('#rsvp-form .field-error').some(function (e) { return !e.hidden && !e.closest('[hidden]'); });
     if (!open) { rsvp.errorKey = null; renderRsvpTexts(); }
   }
 
-  function markChoice(radios, errEl) {
-    var ok = Array.prototype.some.call(radios, function (r) { return r.checked; });
-    errEl.hidden = ok;
-    Array.prototype.forEach.call(radios, function (r) { if (ok) r.removeAttribute('aria-invalid'); else r.setAttribute('aria-invalid', 'true'); });
-    return ok ? null : radios[0];
-  }
-
-  // Returns the first invalid control, or null when everything is filled in.
+  // Returns the first invalid control, or null when everything needed is filled in.
   function validate() {
     var bad = [];
-    Array.prototype.forEach.call($('guest-fields').querySelectorAll('.guest'), function (node) {
-      ['main', 'extra'].forEach(function (q) {
-        if (q === 'extra' && !hasExtra()) return;
-        var box = node.querySelector('[data-q="' + q + '"]');
-        bad.push(markChoice(box.querySelectorAll('input[type=radio]'), box.querySelector('.field-error')));
-      });
-    });
-    bad.push(markChoice($('acc-block').querySelectorAll('input[name="acc"]'), $('err-acc')));
-    if (accValue() === 'yes') {
-      var v = $('acc-people').value.trim();
-      var n = Number(v);
-      var okPeople = v !== '' && Number.isInteger(n) && n >= 1 && n <= 50;
-      $('err-people').hidden = okPeople;
-      if (okPeople) $('acc-people').removeAttribute('aria-invalid');
-      else { $('acc-people').setAttribute('aria-invalid', 'true'); bad.push($('acc-people')); }
+    function need(name, errId) {
+      var ok = !!radioValue(name);
+      setError(errId, radios(name), !ok);
+      if (!ok) bad.push(radios(name)[0]);
     }
-    return bad.filter(Boolean)[0] || null;
+    need('attending', 'err-attending');
+    if (radioValue('attending') === 'yes') {
+      if (seats() > 1) need('people', 'err-people-attending');
+      need('acc', 'err-acc');
+      if (radioValue('acc') === 'yes') {
+        var v = $('acc-people').value.trim();
+        var n = Number(v);
+        var ok = v !== '' && Number.isInteger(n) && n >= 1 && n <= 50;
+        setError('err-acc-people', $('acc-people'), !ok);
+        if (!ok) bad.push($('acc-people'));
+      }
+    }
+    return bad[0] || null;
   }
 
   function collect() {
-    var yes = accValue() === 'yes';
+    var coming = radioValue('attending') === 'yes';
+    var accYes = coming && radioValue('acc') === 'yes';
     return {
       token: getToken(),
-      guests: Array.prototype.map.call($('guest-fields').querySelectorAll('.guest'), function (node) {
-        var main = node.querySelector('[data-q="main"] input:checked');
-        var g = { guest_id: node.getAttribute('data-guest'), attending: main ? main.value : '', allergies: node.querySelector('.allergies').value.trim() };
-        if (hasExtra()) {
-          var x = node.querySelector('[data-q="extra"] input:checked');
-          g.attending_extra = x ? x.value : '';
-        }
-        return g;
-      }),
-      song_requests: Array.prototype.map.call($('song-rows').querySelectorAll('.song'), function (row) {
+      attending: radioValue('attending'),
+      people_attending: coming ? (seats() > 1 ? Number(radioValue('people')) : 1) : 0,
+      allergies: coming ? $('allergies').value.trim() : '',
+      song_requests: coming ? qsa('#song-rows .song').map(function (row) {
         return { artist: row.querySelector('.artist').value.trim(), title: row.querySelector('.title').value.trim() };
-      }).filter(function (s) { return s.artist || s.title; }),
-      accommodation_help: accValue(),
-      accommodation_people: yes ? Number($('acc-people').value) : '',
-      accommodation_notes: yes ? $('acc-notes').value.trim() : '',
+      }).filter(function (s) { return s.artist || s.title; }) : [],
+      accommodation_help: coming ? radioValue('acc') : '',
+      accommodation_people: accYes ? Number($('acc-people').value) : '',
+      accommodation_notes: accYes ? $('acc-notes').value.trim() : '',
       message: $('message').value.trim()
     };
   }
@@ -341,7 +347,8 @@
       })
       .then(function (res) {
         if (res && res.ok === true) {
-          state.data.latest = state.data.latest || {};
+          state.data.latest = { attending: payload.attending };
+          rsvp.lastAttending = payload.attending;
           rsvp.done = true;
           rsvp.errorKey = null;
         } else if (res && res.error === 'deadline_passed') {
@@ -376,26 +383,15 @@
     $('rsvp-deadline').textContent = showDeadline ? t('rsvp_deadline', { date: dl }) : '';
     $('done-deadline').hidden = !showDeadline;
     $('done-deadline').textContent = showDeadline ? t('done_deadline', { date: dl }) : '';
+    var yes = rsvp.lastAttending !== 'no';
+    $('done-title').textContent = t(yes ? 'done_title_yes' : 'done_title_no');
+    $('done-text').textContent = tn(yes ? 'done_yes' : 'done_no');
     $('form-error').hidden = !rsvp.errorKey;
     $('form-error').textContent = rsvp.errorKey ? t(rsvp.errorKey) : '';
     $('submit-status').textContent = rsvp.statusKey ? t(rsvp.statusKey) : '';
   }
 
-  // "15. 1. 2027" / "15 January 2027"
-  function formatShortDate(iso) {
-    var p = String(iso || '').split('-');
-    if (p.length !== 3) return iso;
-    if (state.lang === 'sl') return (+p[2]) + '. ' + (+p[1]) + '. ' + p[0];
-    try {
-      var parts = {};
-      new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
-        .formatToParts(new Date(Date.UTC(+p[0], +p[1] - 1, +p[2], 12)))
-        .forEach(function (x) { parts[x.type] = x.value; });
-      return parts.day + ' ' + parts.month + ' ' + parts.year;
-    } catch (e) { return iso; }
-  }
-
-  /* ---------- start ---------- */
+  /* ---------- dates ---------- */
 
   // "sobota, 19. junij 2027" / "Saturday, 19 June 2027"
   function formatDate(iso) {
@@ -414,19 +410,34 @@
     } catch (e) { return iso; }
   }
 
+  // "15. 1. 2027" / "15 January 2027"
+  function formatShortDate(iso) {
+    var p = String(iso || '').split('-');
+    if (p.length !== 3) return iso;
+    if (state.lang === 'sl') return (+p[2]) + '. ' + (+p[1]) + '. ' + p[0];
+    try {
+      var parts = {};
+      new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
+        .formatToParts(new Date(Date.UTC(+p[0], +p[1] - 1, +p[2], 12)))
+        .forEach(function (x) { parts[x.type] = x.value; });
+      return parts.day + ' ' + parts.month + ' ' + parts.year;
+    } catch (e) { return iso; }
+  }
+
+  /* ---------- start ---------- */
+
   function setupStaticLinks() {
-    var map = document.getElementById('map-link');
-    var web = document.getElementById('web-link');
-    var mails = qsa('#contact-link, .contact-email');
+    var map = $('map-link');
+    var web = $('web-link');
     if (CFG.VENUE_MAP_URL) map.href = CFG.VENUE_MAP_URL; else map.hidden = true;
     if (CFG.VENUE_WEBSITE) web.href = CFG.VENUE_WEBSITE; else web.hidden = true;
-    mails.forEach(function (mail) {
+    qsa('#contact-link, .contact-email').forEach(function (mail) {
       mail.href = 'mailto:' + CFG.CONTACT_EMAIL;
       mail.textContent = CFG.CONTACT_EMAIL;
     });
     if (CFG.PHOTO_URL) {
-      document.getElementById('photo-img').src = CFG.PHOTO_URL;
-      document.getElementById('photo').hidden = false;
+      $('photo-img').src = CFG.PHOTO_URL;
+      $('photo').hidden = false;
     }
   }
 
@@ -445,8 +456,7 @@
       });
     });
 
-    document.getElementById('retry').addEventListener('click', load);
-
+    $('retry').addEventListener('click', load);
     load();
   }
 

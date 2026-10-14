@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex, nofollow">
   <meta name="referrer" content="no-referrer">
   <meta name="theme-color" content="#ffffff">
-  <title data-i18n="meta_title">Dom &amp; Sabina</title>
+  <title data-i18n="meta_title">Domen &amp; Sabina</title>
   <link rel="preload" href="fonts/cormorant-garamond-latin-400-italic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/fonts.css">
   <link rel="stylesheet" href="css/style.css">
@@ -38,17 +38,20 @@
     </div>
   </header>
 
-  <main>
-    <section id="home" class="hero">
-      <h1 class="hero-names">
-        <span data-i18n="hero_name1"></span>
-        <span class="amp" data-i18n="hero_amp"></span>
-        <span data-i18n="hero_name2"></span>
-      </h1>
-      <svg class="branch" aria-hidden="true"><use href="#olive"/></svg>
-      <p class="hero-date" id="date"></p>
-      <p class="hero-place" data-i18n="hero_place"></p>
+  <section id="home" class="hero">
+    <h1 class="hero-names">
+      <span data-i18n="hero_name1"></span>
+      <span class="amp" data-i18n="hero_amp"></span>
+      <span data-i18n="hero_name2"></span>
+    </h1>
+    <p class="hero-date" id="date"></p>
+    <p class="hero-place" data-i18n="hero_place"></p>
+  </section>
 
+  <div class="scene" aria-hidden="true"><img src="images/scene.svg" alt=""></div>
+
+  <main>
+    <div class="welcome">
       <div class="status" aria-live="polite">
         <p data-show="loading" hidden class="muted" data-i18n="loading"></p>
         <div data-show="error" hidden class="notice">
@@ -64,10 +67,11 @@
         <a href="#programme" data-i18n="nav_programme"></a>
         <a href="#venue" data-i18n="nav_venue"></a>
         <a href="#accommodation" data-i18n="nav_accommodation"></a>
+        <a href="#info" data-i18n="nav_info"></a>
         <a href="#faq" data-i18n="nav_faq"></a>
         <a href="#rsvp" data-i18n="nav_rsvp"></a>
       </nav>
-    </section>
+    </div>
 
     <figure class="arch" id="photo" hidden>
       <img id="photo-img" alt="" data-i18n-alt="photo_alt">
@@ -75,16 +79,9 @@
 
     <section id="programme">
       <h2 data-i18n="programme_title"></h2>
-      <div class="day">
-        <h3 data-show="extra" hidden data-i18n="sat_title"></h3>
-        <p data-i18n="sat_desc"></p>
-        <p class="muted" data-i18n="sat_time"></p>
-      </div>
-      <div class="day" data-show="extra" hidden>
-        <h3 data-extra="x_title"></h3>
-        <p data-extra="x_desc"></p>
-        <p class="muted" data-extra="x_time"></p>
-      </div>
+      <p class="lead" data-i18n="programme_intro"></p>
+      <ol class="timeline" id="timeline" data-i18n-aria-label="tt_label"></ol>
+      <p class="muted small" data-i18n="tt_note"></p>
     </section>
 
     <section id="venue">
@@ -95,7 +92,6 @@
         <a id="map-link" target="_blank" rel="noopener noreferrer" data-i18n="venue_map"></a>
         <a id="web-link" target="_blank" rel="noopener noreferrer" data-i18n="venue_web"></a>
       </p>
-      <p data-show="extra" hidden data-extra="x_venue"></p>
     </section>
 
     <section id="accommodation">
@@ -104,16 +100,21 @@
       <p data-i18n="acc_help"></p>
     </section>
 
+    <section id="info">
+      <h2 data-i18n="info_title"></h2>
+      <p class="muted center" data-i18n="info_soon"></p>
+    </section>
+
     <section id="faq">
       <h2 data-i18n="faq_title"></h2>
       <dl class="faq">
         <dt data-i18n="faq_dress_q"></dt>
-        <dd class="muted" data-i18n="faq_dress_a"></dd>
-        <dt data-i18n="faq_kids_q"></dt>
         <dd>
-          <p data-i18n="faq_kids"></p>
-          <p data-show="extra" hidden data-extra="x_kids"></p>
+          <p data-i18n="faq_dress_a1"></p>
+          <p data-i18n="faq_dress_a2"></p>
         </dd>
+        <dt data-i18n="faq_kids_q"></dt>
+        <dd><p data-i18n="faq_kids_a"></p></dd>
         <dt data-i18n="faq_contact_q"></dt>
         <dd><span data-i18n="faq_contact_a"></span> <a id="contact-link"></a></dd>
       </dl>
@@ -125,40 +126,66 @@
 
       <div data-show="ok" hidden>
         <p class="deadline muted" id="rsvp-deadline" hidden></p>
+        <p class="adults" data-i18n="rsvp_adults"></p>
         <p data-show="closed" hidden class="notice"><span data-i18n="rsvp_closed"></span> <a class="contact-email"></a></p>
         <p data-show="saved-before" hidden class="notice" data-i18n="rsvp_saved_before"></p>
 
         <form id="rsvp-form" data-show="open" hidden novalidate>
           <p id="form-error" class="form-error" role="alert" hidden></p>
-          <div id="guest-fields"></div>
 
-          <fieldset class="block">
-            <legend data-i18n="songs_title"></legend>
-            <div id="song-rows"></div>
-            <button type="button" id="add-song" class="btn-link" data-i18n="song_add"></button>
-          </fieldset>
-
-          <fieldset class="block" id="acc-block">
-            <legend data-i18n="acc_q"></legend>
+          <fieldset class="block" id="attend-block">
+            <legend data-i18n-n="attend_q"></legend>
             <div class="choices">
-              <label class="choice"><input type="radio" name="acc" value="yes"><span data-i18n="yes"></span></label>
-              <label class="choice"><input type="radio" name="acc" value="no"><span data-i18n="no"></span></label>
+              <label class="choice"><input type="radio" name="attending" value="yes"><span data-i18n-n="attend_yes"></span></label>
+              <label class="choice"><input type="radio" name="attending" value="no"><span data-i18n-n="attend_no"></span></label>
             </div>
-            <p class="field-error" id="err-acc" hidden data-i18n="err_choose"></p>
-            <div id="acc-details" hidden>
-              <label class="text"><span data-i18n="acc_people"></span>
-                <input type="number" id="acc-people" min="1" max="50" step="1" inputmode="numeric">
-              </label>
-              <p class="field-error" id="err-people" hidden data-i18n="err_people"></p>
-              <label class="text"><span data-i18n="acc_notes"></span>
-                <textarea id="acc-notes" rows="2" maxlength="1000"></textarea>
-              </label>
-            </div>
+            <p class="field-error" id="err-attending" hidden data-i18n="err_choose"></p>
           </fieldset>
 
-          <label class="text block"><span data-i18n="message_label"></span>
-            <textarea id="message" rows="3" maxlength="2000"></textarea>
-          </label>
+          <div id="coming-fields" hidden>
+            <fieldset class="block" id="people-block" hidden>
+              <legend data-i18n-n="people_q"></legend>
+              <div class="choices" id="people-choices"></div>
+              <p class="field-error" id="err-people-attending" hidden data-i18n="err_choose"></p>
+            </fieldset>
+
+            <div class="block">
+              <label class="text"><span class="label-strong" data-i18n="allergies_label"></span>
+                <span class="hint" id="allergies-hint" data-i18n-n="allergies_hint"></span>
+                <textarea id="allergies" rows="2" maxlength="1000" data-i18n-placeholder="allergies_ph"></textarea>
+              </label>
+            </div>
+
+            <fieldset class="block">
+              <legend data-i18n="songs_title"></legend>
+              <div id="song-rows"></div>
+              <button type="button" id="add-song" class="btn-link" data-i18n="song_add"></button>
+            </fieldset>
+
+            <fieldset class="block" id="acc-block">
+              <legend data-i18n-n="acc_q"></legend>
+              <div class="choices">
+                <label class="choice"><input type="radio" name="acc" value="yes"><span data-i18n="yes"></span></label>
+                <label class="choice"><input type="radio" name="acc" value="no"><span data-i18n="no"></span></label>
+              </div>
+              <p class="field-error" id="err-acc" hidden data-i18n="err_choose"></p>
+              <div id="acc-details" hidden>
+                <label class="text"><span data-i18n="acc_people"></span>
+                  <input type="number" id="acc-people" min="1" max="50" step="1" inputmode="numeric">
+                </label>
+                <p class="field-error" id="err-acc-people" hidden data-i18n="err_people"></p>
+                <label class="text"><span data-i18n="acc_notes"></span>
+                  <textarea id="acc-notes" rows="2" maxlength="1000"></textarea>
+                </label>
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="block">
+            <label class="text"><span class="label-strong" data-i18n="message_label"></span>
+              <textarea id="message" rows="3" maxlength="2000"></textarea>
+            </label>
+          </div>
 
           <p class="privacy" data-i18n="privacy_note"></p>
           <button type="submit" class="btn" id="submit-btn" data-i18n="submit"></button>
@@ -167,38 +194,13 @@
 
         <div id="rsvp-done" data-show="done" hidden class="done">
           <svg class="branch small" aria-hidden="true"><use href="#olive"/></svg>
-          <p class="done-title" data-i18n="done_title"></p>
-          <p data-i18n="done_text"></p>
+          <p class="done-title" id="done-title"></p>
+          <p id="done-text"></p>
           <p class="muted" id="done-deadline" hidden></p>
           <button type="button" class="btn btn-outline" id="edit-again" data-i18n="done_edit"></button>
         </div>
       </div>
     </section>
-
-    <template id="tpl-guest">
-      <fieldset class="guest">
-        <legend class="guest-name"></legend>
-        <div class="q" data-q="main">
-          <p class="q-label" data-show="extra" data-i18n="sat_title"></p>
-          <div class="choices">
-            <label class="choice"><input type="radio" value="yes"><span data-i18n="att_yes"></span></label>
-            <label class="choice"><input type="radio" value="no"><span data-i18n="att_no"></span></label>
-          </div>
-          <p class="field-error" hidden data-i18n="err_choose"></p>
-        </div>
-        <div class="q" data-q="extra" data-show="extra">
-          <p class="q-label" data-extra="x_title"></p>
-          <div class="choices">
-            <label class="choice"><input type="radio" value="yes"><span data-i18n="att_yes"></span></label>
-            <label class="choice"><input type="radio" value="no"><span data-i18n="att_no"></span></label>
-          </div>
-          <p class="field-error" hidden data-i18n="err_choose"></p>
-        </div>
-        <label class="text"><span data-i18n="allergies_label"></span>
-          <input type="text" class="allergies" maxlength="500" data-i18n-placeholder="allergies_ph">
-        </label>
-      </fieldset>
-    </template>
 
     <template id="tpl-song">
       <div class="song">
