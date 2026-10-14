@@ -428,9 +428,7 @@
 
   function setupStaticLinks() {
     var map = $('map-link');
-    var web = $('web-link');
     if (CFG.VENUE_MAP_URL) map.href = CFG.VENUE_MAP_URL; else map.hidden = true;
-    if (CFG.VENUE_WEBSITE) web.href = CFG.VENUE_WEBSITE; else web.hidden = true;
     qsa('#contact-link, .contact-email').forEach(function (mail) {
       mail.href = 'mailto:' + CFG.CONTACT_EMAIL;
       mail.textContent = CFG.CONTACT_EMAIL;

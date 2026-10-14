@@ -30,12 +30,18 @@ body {
 a { color: var(--olive); text-underline-offset: 3px; }
 a:focus-visible, button:focus-visible { outline: 2px solid var(--olive); outline-offset: 3px; }
 
-/* Header */
-.top { display: flex; justify-content: space-between; align-items: center; padding: 14px var(--gutter); max-width: 44rem; margin: 0 auto; }
+/* Header: monogram + language, then the section menu – sticky so it is always visible */
+.top { position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,.96); border-bottom: 1px solid var(--stone); }
+@supports ((-webkit-backdrop-filter: blur(4px)) or (backdrop-filter: blur(4px))) {
+  .top { background: rgba(255,255,255,.85); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+}
+.top-row { display: flex; justify-content: space-between; align-items: center; padding: 4px var(--gutter) 0; max-width: 44rem; margin: 0 auto; }
 .monogram { font: italic 600 1.3rem var(--serif); color: var(--olive); text-decoration: none; }
-.lang-switch { display: flex; gap: 4px; }
+.top-actions { display: flex; align-items: center; gap: 6px; }
+.rsvp-pill { display: inline-flex; align-items: center; min-height: 36px; padding: 0 14px; border-radius: 999px; background: var(--olive); color: var(--white); font-size: 0.88rem; font-weight: 500; text-decoration: none; white-space: nowrap; }
+.lang-switch { display: flex; gap: 0; }
 .lang-switch button {
-  min-width: 44px; min-height: 44px; padding: 0 6px;
+  min-width: 40px; min-height: 44px; padding: 0 4px;
   border: 0; background: none; cursor: pointer;
   font: 400 0.9rem var(--sans); color: var(--muted);
 }
@@ -53,7 +59,7 @@ main { max-width: 44rem; margin: 0 auto; }
 .hero-place { margin: 0; color: var(--muted); }
 
 /* Scene illustration (vineyards, cypress path, long table) – full width, fades into the page */
-.scene { margin: 4px 0 0; height: 340px; overflow: hidden;
+.scene { margin: 4px 0 0; height: 290px; overflow: hidden;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 90%, transparent 100%);
           mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 90%, transparent 100%); }
 .scene img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 100%; }
@@ -65,15 +71,24 @@ main { max-width: 44rem; margin: 0 auto; }
 .notice p { margin: 0 0 12px; }
 .muted { color: var(--muted); }
 
-.section-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 18px; margin: 30px 0 0; padding-top: 18px; border-top: 1px solid var(--stone); }
-.section-nav a { padding: 8px 0; text-decoration: none; font-size: 0.95rem; }
+.section-nav {
+  display: flex; gap: 22px; max-width: 44rem; margin: 0 auto; padding: 0 var(--gutter);
+  overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+}
+.section-nav::-webkit-scrollbar { display: none; }
+/* soft fade at the right edge on phones: shows the menu continues sideways */
+@media (max-width: 39.99rem) {
+  .section-nav { -webkit-mask-image: linear-gradient(to right, #000 85%, transparent); mask-image: linear-gradient(to right, #000 85%, transparent); padding-right: 40px; }
+}
+.section-nav a { flex: none; padding: 10px 0 12px; text-decoration: none; font-size: 0.95rem; white-space: nowrap; }
+@media (min-width: 40rem) { .section-nav { justify-content: center; } }
 
 /* Villa photo in an Istrian stone-arch frame */
 .arch { margin: 28px var(--gutter) 0; aspect-ratio: 4 / 5; max-height: 560px; border-radius: 50% 50% 6px 6px / 40% 40% 6px 6px; /* 4:5 frame → semicircular top */ overflow: hidden; background: var(--mist); }
 .arch img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 /* Sections */
-section { padding: 48px var(--gutter) 0; scroll-margin-top: 12px; }
+section { padding: 48px var(--gutter) 0; scroll-margin-top: 96px; }
 #home { scroll-margin-top: 0; }
 h2 { margin: 0 0 16px; font: 600 2.1rem/1.1 var(--serif); color: var(--olive); text-align: center; }
 h3 { margin: 0 0 4px; font: italic 600 1.4rem var(--serif); color: var(--olive); }
@@ -92,6 +107,19 @@ section p { margin: 0 0 10px; }
 .venue-name { font: italic 600 1.45rem var(--serif); color: var(--olive); margin-bottom: 2px; }
 .links { display: flex; flex-wrap: wrap; gap: 4px 20px; }
 .links a { display: inline-block; padding: 8px 0; }
+
+/* Route map (Natural Earth outlines; routes are schematic) */
+.map-figure { margin: 18px 0 0; }
+.map { display: block; width: 100%; height: auto; }
+.map-label { font-family: var(--sans); fill: var(--ink); }
+.map-label.airport { font-size: 22px; font-weight: 500; paint-order: stroke; stroke: #f1f4ec; stroke-width: 5px; stroke-linejoin: round; }
+.map-label.city { font-size: 19px; fill: var(--muted); }
+.map-label.country { font: italic 600 30px var(--serif); fill: #7d866f; letter-spacing: 0.04em; }
+.map-label.sea { font: italic 600 24px var(--serif); fill: #5d7f75; }
+.map-label.villa { font: italic 600 30px var(--serif); fill: var(--olive); paint-order: stroke; stroke: #d9e8e3; stroke-width: 6px; stroke-linejoin: round; }
+.map-legend { list-style: none; margin: 14px 0 6px; padding: 0; }
+.map-legend li { display: flex; align-items: center; gap: 12px; padding: 4px 0; }
+.swatch { width: 40px; height: 10px; flex: none; }
 
 .faq { margin: 0; }
 .faq dt { font-weight: 500; margin-top: 18px; }

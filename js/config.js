@@ -7,7 +7,6 @@ window.SITE_CONFIG = {
   WEDDING_DATE: '2027-06-19',
 
   VENUE_MAP_URL: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Villa Paradiso d\'Istria, Kućibreg 3, 52462 Kućibreg, Croatia'),
-  VENUE_WEBSITE: 'https://paradisodistria.com/',
 
   CONTACT_EMAIL: 'sabinadomensmuc@gmail.com',
 
