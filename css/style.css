@@ -134,6 +134,8 @@ h3 { margin: 0 0 6px; font: italic 600 1.45rem var(--serif); color: var(--olive)
 .map-label.city { font-size: 22px; font-weight: 500; fill: #3d4630; paint-order: stroke; stroke: #f1f4ec; stroke-width: 5px; stroke-linejoin: round; }
 .map-label.country { font: italic 600 30px var(--serif); fill: #7d866f; letter-spacing: 0.04em; }
 .map-label.sea { font: italic 600 24px var(--serif); fill: #5d7f75; }
+.map-label.stop { font-size: 22px; font-weight: 600; fill: var(--ink); paint-order: stroke; stroke: #f1f4ec; stroke-width: 5px; stroke-linejoin: round; }
+.map-credit { margin-top: 6px; font-size: 0.78rem; color: var(--muted); }
 .map-label.villa { font: italic 600 30px var(--serif); fill: var(--olive); paint-order: stroke; stroke: #f1f4ec; stroke-width: 6px; stroke-linejoin: round; }
 
 
