@@ -121,6 +121,12 @@ h3 { margin: 0 0 6px; font: italic 600 1.45rem var(--serif); color: var(--olive)
 .links { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 20px; }
 .links a { display: inline-block; padding: 8px 0; }
 
+/* Recommended route: a real sequence, so numbered steps (centred, number before the text) */
+.route { margin: 22px 0 6px; padding: 18px 0 4px; border-top: 1px solid rgba(75, 90, 46, 0.2); }
+.route-steps { list-style: none; margin: 8px 0 12px; padding: 0; counter-reset: step; }
+.route-steps li { counter-increment: step; padding: 6px 0; line-height: 1.45; }
+.route-steps li::before { content: counter(step) "."; margin-right: 8px; font: italic 600 1.25rem/1 var(--serif); color: var(--olive); }
+
 /* Route map (Natural Earth outlines; routes are schematic) */
 .map-figure { margin: 18px 0 0; }
 .map { display: block; width: 100%; height: auto; }

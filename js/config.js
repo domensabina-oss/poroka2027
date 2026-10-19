@@ -8,6 +8,11 @@ window.SITE_CONFIG = {
 
   VENUE_MAP_URL: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Villa Paradiso d\'Istria, Kućibreg 3, 52462 Kućibreg, Croatia'),
 
+  // Recommended route from Ljubljana (via the Črni Kal exit and Belvedur) as a Google Maps directions link.
+  ROUTE_MAP_URL: 'https://www.google.com/maps/dir/?api=1&origin=' + encodeURIComponent('Ljubljana, Slovenia') +
+    '&destination=' + encodeURIComponent('Kućibreg 3, 52462 Kućibreg, Croatia') +
+    '&waypoints=' + encodeURIComponent('Belvedur, Koper, Slovenia') + '&travelmode=driving',
+
   CONTACT_EMAIL: 'sabinadomensmuc@gmail.com',
 
   // Timetable (24h). "label" is a key in js/i18n.js, so each line exists in SL and EN.
