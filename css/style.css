@@ -60,16 +60,21 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--olive); outline
 }
 .panel-tint { background: var(--tint); }
 .panel-inner { width: 100%; max-width: 40rem; margin: 0 auto; padding: 0 var(--gutter); }
-.panel-home { padding: 0 0 32px; justify-content: flex-start; }
+.panel-home { padding: 0 0 32px; justify-content: flex-start; scroll-snap-align: none; } /* first page: the top of the page is its natural stop */
 
 /* Hero */
-.hero { text-align: center; padding: 24px var(--gutter) 0; max-width: 44rem; margin: 0 auto; }
-.hero-names { margin: 0; font: italic 400 4.4rem/0.92 var(--serif); color: var(--olive); }
+.hero { text-align: center; padding: 16px var(--gutter) 0; max-width: 44rem; margin: 0 auto; }
+.hero-photo { width: 150px; height: 150px; margin: 0 auto 10px; border-radius: 50%; overflow: hidden; background: var(--tint); }
+.hero-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.hero-names { margin: 0; font: italic 400 3.9rem/0.92 var(--serif); color: var(--olive); }
+@media (min-width: 700px) {
+  .hero-names { font-size: 4.4rem; }
+}
 .hero-names span { display: block; }
 .hero-names .amp { font-size: 0.55em; color: var(--sage); margin: 0.1em 0; }
 .branch { display: block; width: 180px; height: 50px; margin: 20px auto 8px; color: var(--olive); }
 .branch.small { width: 110px; height: 30px; margin-bottom: 4px; }
-.hero-date { margin: 22px 0 2px; font: 500 1.08rem var(--sans); letter-spacing: 0.03em; }
+.hero-date { margin: 14px 0 2px; font: 500 1.08rem var(--sans); letter-spacing: 0.03em; }
 .hero-place { margin: 0; color: var(--muted); }
 
 /* Scene illustration (vineyards, cypress path, long table) – full width, fades into the page */

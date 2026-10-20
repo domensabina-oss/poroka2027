@@ -17,7 +17,8 @@ window.SITE_CONFIG = {
 
   // Programme highlights (24h). "title" (catchphrase) and "label" (plain description) are keys in js/i18n.js, so each line exists in SL and EN.
   TIMETABLE: [
-    { time: '14:00', title: 'tt_t_ceremony', label: 'tt_ceremony' },
+    { time: '13:00', title: 'tt_t_arrival',  label: 'tt_arrival' },
+    { time: '15:00', title: 'tt_t_ceremony', label: 'tt_ceremony' },
     { time: '18:00', title: 'tt_t_dinner',   label: 'tt_dinner' },
     { time: '20:30', title: 'tt_t_party',    label: 'tt_party' },
     { time: '22:00', title: 'tt_t_cake',     label: 'tt_cake' },
