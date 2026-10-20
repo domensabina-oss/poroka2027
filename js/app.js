@@ -98,6 +98,7 @@
 
   function renderTimetable() {
     var ol = $('timeline');
+    if (!ol) return; // programme section is currently hidden from the page
     ol.textContent = '';
     (CFG.TIMETABLE || []).forEach(function (item) {
       var li = document.createElement('li');
