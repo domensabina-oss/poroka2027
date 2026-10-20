@@ -98,17 +98,22 @@
 
   function renderTimetable() {
     var ol = $('timeline');
-    if (!ol) return; // programme section is currently hidden from the page
+    if (!ol) return;
     ol.textContent = '';
     (CFG.TIMETABLE || []).forEach(function (item) {
       var li = document.createElement('li');
       var time = document.createElement('span');
       time.className = 'tt-time';
       time.textContent = item.time;
+      var title = document.createElement('span');
+      title.className = 'tt-title';
+      title.textContent = t(item.title);
       var what = document.createElement('span');
       what.className = 'tt-what';
       what.textContent = t(item.label);
       li.appendChild(time);
+      li.appendChild(document.createTextNode(' '));
+      li.appendChild(title);
       li.appendChild(document.createTextNode(' '));
       li.appendChild(what);
       ol.appendChild(li);

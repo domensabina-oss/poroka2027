@@ -37,6 +37,11 @@ window.I18N = {
     tt_party: 'Prvi ples in začetek zabave z DJ-em',
     tt_cake: 'Torta',
     tt_end: 'Konec uradnega programa',
+    tt_t_ceremony: 'Da, za vedno. Brez reklamacij.',
+    tt_t_dinner: 'Mangiamo, mangiamo!',
+    tt_t_party: 'A Little Party Never Killed Nobody',
+    tt_t_cake: 'Dieta? Jutri.',
+    tt_t_end: 'Kdo zadnji odide, ugasne luč',
     tt_note: 'Okvirna časovnica – natančen program objaviva bližje poroki.',
 
     venue_title: 'Lokacija',
@@ -170,6 +175,11 @@ window.I18N = {
     tt_party: 'First dance, then the DJ starts the party',
     tt_cake: 'Wedding cake',
     tt_end: 'Official end of the programme',
+    tt_t_ceremony: 'Yes, forever. No returns.',
+    tt_t_dinner: 'Mangiamo, mangiamo!',
+    tt_t_party: 'A Little Party Never Killed Nobody',
+    tt_t_cake: 'Diet? Tomorrow.',
+    tt_t_end: 'Last one out turns off the lights',
     tt_note: 'Approximate timetable – we’ll confirm the details closer to the day.',
 
     venue_title: 'Venue',

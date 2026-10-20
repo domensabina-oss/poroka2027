@@ -112,10 +112,10 @@ h3 { margin: 0 0 6px; font: italic 600 1.45rem var(--serif); color: var(--olive)
 
 /* Timetable: a real sequence, so an ordered list with times */
 .timeline { list-style: none; margin: 20px 0 14px; padding: 0; border-top: 1px solid rgba(75, 90, 46, 0.2); }
-.timeline li { padding: 11px 0; border-bottom: 1px solid rgba(75, 90, 46, 0.2); text-align: center; }
-.timeline .tt-time { margin-right: 8px; }
-.tt-time { font: italic 600 1.3rem/1 var(--serif); color: var(--olive); font-variant-numeric: lining-nums; }
-.tt-what { line-height: 1.4; }
+.timeline li { padding: 14px 0; border-bottom: 1px solid rgba(75, 90, 46, 0.2); text-align: center; }
+.tt-time { display: block; font: italic 600 1.3rem/1 var(--serif); color: var(--olive); font-variant-numeric: lining-nums; }
+.tt-title { display: block; margin-top: 6px; font: italic 400 1.45rem/1.25 var(--serif); color: var(--ink); }
+.tt-what { display: block; margin-top: 3px; font-size: 0.9rem; line-height: 1.4; color: var(--muted); }
 
 .venue-name { font: italic 600 1.45rem var(--serif); color: var(--olive); margin-bottom: 2px; }
 .links { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 20px; }
