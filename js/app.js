@@ -12,7 +12,7 @@
   // status: 'none' (no token) | 'loading' | 'ok' | 'invalid' | 'error'
   var state = { lang: 'sl', langChosen: false, status: 'none', data: null };
   // RSVP form state. errorKey/statusKey are translation keys so messages switch language too.
-  var rsvp = { built: false, done: false, sending: false, errorKey: null, statusKey: null, lastAttending: null };
+  var rsvp = { built: false, done: false, sending: false, errorKey: null, statusKey: null, lastAttending: null, lastPeople: 0 };
 
   function $(id) { return document.getElementById(id); }
   function qsa(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
@@ -48,9 +48,21 @@
     return s;
   }
 
-  // Seats on this invitation → text variant: 1 person, 2 (Slovene dual), 3+ (plural).
+  // Seats on this invitation (named guests + unnamed "+1" seats).
   function seats() { return state.data ? Math.max(1, state.data.seats || state.data.guests.length || 1) : 1; }
-  function tn(base) { var n = seats(); return t(base + '_' + (n >= 3 ? 3 : n)); }
+  // People we address by name: "+1" seats don't count, so "Nika +1" is asked "Prideš?" (singular)
+  // and says how many come via "Število oseb".
+  function addressed() {
+    if (!state.data) return 1;
+    var named = (state.data.guests || []).filter(function (g) { var n = String(g.first_name || '').trim(); return n && n !== PLUS_ONE; }).length;
+    return Math.max(1, named);
+  }
+  // Text variant: _1 one person, _2 two (Slovene dual), _3 three or more (plural).
+  // The allergies hint follows seats (a +1 may have needs too); everything else follows addressed().
+  function tn(base, n) {
+    if (n == null) n = base === 'allergies_hint' ? seats() : addressed();
+    return t(base + '_' + (n >= 3 ? 3 : n));
+  }
 
   function applyI18n(root) {
     qsa('[data-i18n]', root).forEach(function (el) { el.textContent = t(el.getAttribute('data-i18n')); });
@@ -357,6 +369,7 @@
         if (res && res.ok === true) {
           state.data.latest = { attending: payload.attending };
           rsvp.lastAttending = payload.attending;
+          rsvp.lastPeople = payload.people_attending || 0;
           rsvp.done = true;
           rsvp.errorKey = null;
         } else if (res && res.error === 'deadline_passed') {
@@ -397,7 +410,8 @@
     $('done-deadline').textContent = showDeadline ? t('done_deadline', { date: dl }) : '';
     var yes = rsvp.lastAttending !== 'no';
     $('done-title').textContent = t(yes ? 'done_title_yes' : 'done_title_no');
-    $('done-text').textContent = tn(yes ? 'done_yes' : 'done_no');
+    // "Veseliva se te!" for one person; "…vaju!" if a +1 guest brings someone (never fewer than addressed).
+    $('done-text').textContent = yes ? tn('done_yes', Math.max(addressed(), rsvp.lastPeople || 0)) : tn('done_no');
     $('form-error').hidden = !rsvp.errorKey;
     $('form-error').textContent = rsvp.errorKey ? t(rsvp.errorKey) : '';
     $('submit-status').textContent = rsvp.statusKey ? t(rsvp.statusKey) : '';
