@@ -19,7 +19,7 @@ window.SITE_CONFIG = {
   TIMETABLE: [
     { time: '13:00', title: 'tt_t_arrival',  label: 'tt_arrival' },
     { time: '15:00', title: 'tt_t_ceremony', label: 'tt_ceremony' },
-    { time: '19:00', title: 'tt_t_dinner',   label: 'tt_dinner' },
+    { time: '18:00', title: 'tt_t_dinner',   label: 'tt_dinner' },
     { time: '20:30', title: 'tt_t_party',    label: 'tt_party' },
     { time: '22:00', title: 'tt_t_cake',     label: 'tt_cake' },
     { time: '00:00', title: 'tt_t_end',      label: 'tt_end' }
